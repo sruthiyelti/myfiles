@@ -1,0 +1,54 @@
+node{
+    stage('scm checkout'){
+         git 'https://github.com/sruthiyelti/mahalogin.git'
+    }
+    stage('mvn package'){
+        sh label: '', script: 'mvn package'
+    }
+    stage('upload to nexus'){
+      nexusArtifactUploader artifacts: [
+          [
+              artifactId: 'mahaLogin',
+               classifier: '',
+               file: 'target/mahaLogin-1.0.0.war',
+               type: 'war'
+               ]
+               ], 
+               credentialsId: 'nexus3', 
+               groupId: 'com.maha', 
+               nexusUrl: '34.221.124.60:8081', 
+               nexusVersion: 'nexus3', 
+               protocol: 'http', 
+               repository: 'simpleapp-release', (nexus repo name)
+               version: '1.0.0'
+    }
+  } 
+  *******************************************************************************************************
+TO DOWNLOAD NEXUS SONATYPE :
+https://www.cidevops.com/2018/07/install-nexus3-on-ubuntu-1604-how-to.html
+****************************************************************************************************
+How to configure nexus repo in jenkins
+https://dzone.com/articles/jenkins-publish-maven-artifacts-to-nexus-oss-using
+
+**********************************************************************************************
+reference video;
+https://www.youtube.com/watch?v=p_Wo3aqUJto&ab_channel=JavaHomeCloud
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$44
+NEXUS CONFIGURATION:
+1.create the vm t2medium.
+2.install java
+3.install appache
+4.install nexus.
+5.copy the public ip:8081
+6.nexus repo will open
+7.username:admin password:admin123
+8.create one repository
+
+IN JENKINS:
+1.install nexus uploader plugin
+2.in pipeline script generate the script by giving all details with help of pom.xml file in github.
+3.then script will generate
+4.copy and paste in pipeline build the job
+5.war file will store in nexus repo.
+
+https://www.youtube.com/watch?v=p_Wo3aqUJto&ab_channel=JavaHomeCloud
