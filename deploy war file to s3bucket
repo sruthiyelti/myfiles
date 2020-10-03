@@ -1,0 +1,44 @@
+node{
+    stage('scm checkout'){
+        git 'https://github.com/sruthiyelti/DevOpsaws-Project.git'
+    }
+    stage('mvn package'){
+        sh label: '', script: 'mvn package'
+    }
+    stage('artifacts to s3'){
+      withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'deploytos3', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+         sh  "aws s3 cp /var/lib/jenkins/workspace/dockerpipeline-app/target/DevOpsRocks.war s3://viveksruthi123"
+    }          
+           
+    }
+}
+-----------------------------------------------------------------------------------------
+REFERENCE VIDEO:
+
+https://www.youtube.com/watch?v=GQZYpIRxi-g&ab_channel=ValaxyTechnologies
+
+###########################################################################################################################################################
+1.First we need one jenkins server.
+
+2.create one s3 bucket
+
+3.create new IAM role with s3 full access
+IAM-->create role -->ec2
+PERMISSIONS:amazons3FULLACCESS
+
+4.Attach IAM role to jenkins server(ec2)
+ select the server --> click on actions --> instance settings -->attchreplace IAM ROLE
+  select the role which u have created.
+   
+5.Install s3 publisher plugin in jenkins.
+Manage jenkins -->manage plugins -->avaiable --> s3 publisher
+
+6.Configure s3 profile on jenkins
+manage jenkins -->configure systems -->amazon s3 profiles
+Profile name:
+Use IAM ROLE:enable it
+apply-save
+
+7.create pipeline job to store artifacts under s3.
+8.script is generator using pipeline syntax
+select s3 publisher
