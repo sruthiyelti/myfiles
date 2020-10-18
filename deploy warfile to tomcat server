@@ -1,0 +1,54 @@
+tomcat code:
+******************
+pipeline {
+    agent any
+     
+    stages {
+      stage('checkout') {
+           steps {
+             
+                git 'https://github.com/sruthiyelti/DevOpsaws-Project.git'
+          }
+        }
+        stage ('Build'){
+        
+            steps
+            {
+                sh label: '', script: 'mvn package'
+            }
+        }
+       stage("deploycode"){
+            steps{
+                sshagent(['myubuntu'])  {
+                sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/tomcat/target/DevOpsRocks.war ubuntu@34.219.26.202:/home/ubuntu/apache-tomcat-9.0.11/webapps"
+
+
+    }
+  }
+
+   }
+ }
+}                     (after workspace tomcat is pipeline job name)
+*************************************************************************************************
+1.launch one tomcat server.
+2.install apache tomcat and java.
+3.then go to root user (sudo su -) and open nano etc/sudoers file-then under member of admin group add %ubuntu ALL=(ALL) ALL(give permission to ubuntu user)
+4.then go back to cd /home/ubuntu
+5.go to  cd apache-tomcat-9.0.11/ 
+6. ls -lrt
+7. chown ubuntu:ubuntu webapps
+JENKINS DASHBOARD:
+1.install ssh agent plugin.
+2.then go to pipeline syntax-select ssh agent-click on add-jenkins-under kind (selct ssh username-private key)
+  id:give any name
+  description:any name
+  username:ubuntu
+  privatekey:copy the pem file and paste
+ then generate the script
+under the script (sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/tomcat/target/DevOpsRocks.war 
+ubuntu@34.219.26.202:/home/ubuntu/apache-tomcat-9.0.11/webapps") add this command.
+link:https://www.youtube.com/watch?v=G_UCeeb5EPc&ab_channel=ValaxyTechnologies
+
+
+
+
